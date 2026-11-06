@@ -1,7 +1,10 @@
 package net.javaguides.netflux.service;
 
+import java.time.Duration;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import net.javaguides.netflux.domain.Movie;
+import net.javaguides.netflux.domain.MovieEvent;
 import net.javaguides.netflux.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -28,5 +31,12 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Flux<Movie> getAllMovies() {
         return movieRepository.findAll();
+    }
+
+    @Override
+    public Flux<MovieEvent> streamMovieEvents(final String id) {
+        return Flux.<MovieEvent>generate(sink ->
+                        sink.next(new MovieEvent(id, new Date())))
+                .delayElements(Duration.ofSeconds(1));
     }
 }

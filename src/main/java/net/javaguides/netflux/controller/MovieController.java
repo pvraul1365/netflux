@@ -2,7 +2,9 @@ package net.javaguides.netflux.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.javaguides.netflux.domain.Movie;
+import net.javaguides.netflux.domain.MovieEvent;
 import net.javaguides.netflux.service.MovieService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,4 +38,8 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
+    @GetMapping(value = "/{id}/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<MovieEvent> streamMovieEvents(@PathVariable final String id) {
+        return movieService.streamMovieEvents(id);
+    }
 }
